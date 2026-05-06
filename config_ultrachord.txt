@@ -6,8 +6,8 @@
   "min_version_code": 1,
   "update_url": "https://play.google.com/store/apps/details?id=com.UltraChord.Tuner",
 
-  "message_tr": "sikeyim",
+  "message_tr": "denemem",
   "disabled_message_tr": "",
   "maintenance_message_tr": "",
-  "kill_switch_message_tr": "skym"
+  "kill_switch_message_tr": "deenemmm"
 }

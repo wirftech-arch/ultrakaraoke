@@ -9,5 +9,11 @@
   "message_tr": "",
   "disabled_message_tr": "",
   "maintenance_message_tr": "",
-  "kill_switch_message_tr": ""
+  "kill_switch_message_tr": "",
+
+  "lyrics_provider": {
+    "enabled": true,
+    "turkish_chain": ["alternatifim", "lyricsovh"],
+    "foreign_chain": ["azlyrics", "lyricsovh", "lrclib"]
+  }
 }

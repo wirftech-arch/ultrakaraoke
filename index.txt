@@ -1,1 +1,31 @@
-rb
+{
+  "clients": [
+    {
+      "name": "ANDROID_VR",
+      "version": "1.56.21",
+      "id": "28",
+      "ua": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip",
+      "ctx": {
+        "androidSdkVersion": 32,
+        "osName": "Android",
+        "osVersion": "12L",
+        "deviceMake": "Oculus",
+        "deviceModel": "Quest 3"
+      },
+      "hdr": {}
+    },
+    {
+      "name": "IOS",
+      "version": "19.45.4",
+      "id": "5",
+      "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
+      "ctx": {
+        "deviceMake": "Apple",
+        "deviceModel": "iPhone16,2",
+        "osName": "iOS",
+        "osVersion": "18.1.0"
+      },
+      "hdr": {}
+    }
+  ]
+}

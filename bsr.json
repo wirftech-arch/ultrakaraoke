@@ -139,7 +139,12 @@
         },
         "headers": {}
       }
-    ]
+    ],
+    "resolveStrategy": {
+      "preferDirectUrl": true,
+      "cipherFallback": true,
+      "previewClientCount": 2
+    }
   },
   "download": {
     "userAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
@@ -156,7 +161,11 @@
     "minChunkSizeBytes": 524288,
     "expireToleranceSec": 60,
     "audioFormats": {
-      "preferredMimes": ["audio/mp4", "audio/aac", "audio/m4a"],
+      "preferredMimes": [
+        "audio/mp4",
+        "audio/aac",
+        "audio/m4a"
+      ],
       "targetBitrateMin": 120000,
       "targetBitrateMax": 136000,
       "fallbackBitrateMin": 96000,
@@ -164,7 +173,11 @@
       "minBitrate": 64000
     },
     "videoFormats": {
-      "preferredCodecs": ["video/mp4", "avc", "h264"],
+      "preferredCodecs": [
+        "video/mp4",
+        "avc",
+        "h264"
+      ],
       "outputDir": "UltraMp3",
       "audioOutputDir": "Music/UltraMp3",
       "videoOutputDir": "Movies/UltraMp3"
@@ -179,12 +192,54 @@
     "clenParam": "clen",
     "expireParam": "expire",
     "previewClientCount": 2,
-    "previewAudioMimes": ["audio/mp4", "audio/aac"]
+    "previewAudioMimes": [
+      "audio/mp4",
+      "audio/aac"
+    ],
+    "retryCount": 3,
+    "retryDelayBaseMs": 1500,
+    "cookieResetOnAttempt": 1,
+    "audioEmptyErrorMsg": "Ses akisi bulunamadi",
+    "streamErrorMsg": "Stream alınamadı — lütfen tekrar deneyin",
+    "previewMinBitrate": 0
   },
   "cookie": {
     "harvestUrl": "https://www.youtube.com",
     "visitorDataJs": "window.ytcfg?.get('VISITOR_DATA') || ''",
     "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
-    "timeoutMs": 12000
+    "timeoutMs": 12000,
+    "blockNetworkImage": true,
+    "domStorageEnabled": true,
+    "cookieDomain": "https://www.youtube.com"
+  },
+  "engine": {
+    "defaultEndpoint": "https://www.youtube.com/youtubei/v1/player",
+    "defaultKey": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+    "iosKey": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+    "defaultContext": {
+      "hl": "en",
+      "gl": "US",
+      "utcOffsetMinutes": 0
+    },
+    "statusBlacklist": [
+      "LOGIN_REQUIRED",
+      "UNPLAYABLE",
+      "ERROR"
+    ],
+    "ageGateStatus": "AGE_VERIFICATION_REQUIRED",
+    "audioMimePreference": [
+      "mp4",
+      "aac",
+      "m4a"
+    ],
+    "videoCodecPreference": [
+      "video/mp4",
+      "avc",
+      "h264"
+    ],
+    "cipherParamUrl": "url",
+    "cipherParamSig": "s",
+    "cipherParamSp": "sp",
+    "cipherParamSpDefault": "signature"
   }
 }

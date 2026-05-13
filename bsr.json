@@ -1,0 +1,190 @@
+{
+  "version": 5,
+  "updated": "2026-05-14",
+  "search": {
+    "baseUrl": "https://www.googleapis.com/youtube/v3/search",
+    "suggestUrl": "https://suggestqueries-clients6.google.com/complete/search",
+    "suggestParams": {
+      "client": "youtube",
+      "ds": "yt",
+      "hl": "en"
+    },
+    "defaultParams": {
+      "part": "snippet",
+      "type": "video",
+      "maxResults": 20,
+      "regionCode": "US",
+      "relevanceLanguage": "en"
+    },
+    "trendingUrl": "https://www.googleapis.com/youtube/v3/videos",
+    "trendingParams": {
+      "part": "snippet,statistics",
+      "chart": "mostPopular",
+      "regionCode": "US",
+      "maxResults": 20
+    },
+    "thumbnailTemplate": "https://i.ytimg.com/vi/{videoId}/mqdefault.jpg",
+    "watchUrlTemplate": "https://www.youtube.com/watch?v={videoId}"
+  },
+  "player": {
+    "endpoint": "https://www.youtube.com/youtubei/v1/player",
+    "defaultKey": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+    "defaultParams": {
+      "prettyPrint": false,
+      "contentCheckOk": true,
+      "racyCheckOk": true,
+      "hl": "en",
+      "gl": "US",
+      "utcOffsetMinutes": 0
+    },
+    "clients": [
+      {
+        "priority": 1,
+        "name": "IOS",
+        "version": "19.45.4",
+        "id": "5",
+        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
+        "ctx": {
+          "deviceMake": "Apple",
+          "deviceModel": "iPhone16,2",
+          "osName": "iOS",
+          "osVersion": "18.1.0"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 2,
+        "name": "ANDROID_TESTSUITE",
+        "version": "1.9",
+        "id": "30",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 3,
+        "name": "ANDROID_VR",
+        "version": "1.56.21",
+        "id": "28",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
+        "ctx": {
+          "androidSdkVersion": 32,
+          "osName": "Android",
+          "osVersion": "12L",
+          "deviceMake": "Oculus",
+          "deviceModel": "Quest 3"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 4,
+        "name": "ANDROID",
+        "version": "19.44.38",
+        "id": "3",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/19.44.38 (Linux; U; Android 11; Pixel 5) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 5,
+        "name": "WEB_EMBEDDED_PLAYER",
+        "version": "2.20231121.08.00",
+        "id": "56",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "ctx": {
+          "clientFormFactor": "UNKNOWN_FORM_FACTOR"
+        },
+        "headers": {
+          "Origin": "https://www.youtube.com",
+          "Referer": "https://www.youtube.com/"
+        }
+      },
+      {
+        "priority": 6,
+        "name": "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
+        "version": "2.0",
+        "id": "85",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0) AppleWebKit/538.1 (KHTML, like Gecko) Version/6.0 TV Safari/538.1",
+        "ctx": {
+          "clientFormFactor": "UNKNOWN_FORM_FACTOR"
+        },
+        "headers": {
+          "Origin": "https://www.youtube.com",
+          "Referer": "https://www.youtube.com/"
+        }
+      },
+      {
+        "priority": 7,
+        "name": "ANDROID_CREATOR",
+        "version": "24.45.100",
+        "id": "14",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.apps.youtube.creator/24.45.100 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30
+        },
+        "headers": {}
+      }
+    ]
+  },
+  "download": {
+    "userAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "chunkCount": 4,
+    "chunkBufferBytes": 1048576,
+    "streamingBufferBytes": 1048576,
+    "maxRetries": 3,
+    "retryDelayMs": 1500,
+    "connectionPoolSize": 16,
+    "connectionKeepAliveSec": 600,
+    "dispatcherMaxRequests": 32,
+    "dispatcherMaxPerHost": 16,
+    "connectTimeoutSec": 30,
+    "minChunkSizeBytes": 524288,
+    "expireToleranceSec": 60,
+    "audioFormats": {
+      "preferredMimes": ["audio/mp4", "audio/aac", "audio/m4a"],
+      "targetBitrateMin": 120000,
+      "targetBitrateMax": 136000,
+      "fallbackBitrateMin": 96000,
+      "fallbackBitrateMax": 160000,
+      "minBitrate": 64000
+    },
+    "videoFormats": {
+      "preferredCodecs": ["video/mp4", "avc", "h264"],
+      "outputDir": "UltraMp3",
+      "audioOutputDir": "Music/UltraMp3",
+      "videoOutputDir": "Movies/UltraMp3"
+    },
+    "rangeParams": "rn=1&rbuf=0",
+    "throttleTokenParam": "n"
+  },
+  "stream": {
+    "videoIdRegex": "(?:v=|youtu\\.be/|/embed/|/shorts/)([a-zA-Z0-9_-]{11})",
+    "googlevideoDomain": "googlevideo.com",
+    "googleusercontentDomain": "googleusercontent.com",
+    "clenParam": "clen",
+    "expireParam": "expire",
+    "previewClientCount": 2,
+    "previewAudioMimes": ["audio/mp4", "audio/aac"]
+  },
+  "cookie": {
+    "harvestUrl": "https://www.youtube.com",
+    "visitorDataJs": "window.ytcfg?.get('VISITOR_DATA') || ''",
+    "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
+    "timeoutMs": 12000
+  }
+}

@@ -1,134 +1,1137 @@
-{
-  "meta": {
-    "header_client_name": "X-YouTube-Client-Name",
-    "header_client_version": "X-YouTube-Client-Version",
-    "visitor_js_key": ""
-  },
-  "keys": {
-    "video_id": "videoId",
-    "context": "context",
-    "client": "client",
-    "client_name": "clientName",
-    "client_version": "clientVersion",
-    "hl": "hl",
-    "gl": "gl",
-    "utc_offset_minutes": "utcOffsetMinutes",
-    "visitor_data": "visitorData",
-    "content_check_ok": "contentCheckOk",
-    "racy_check_ok": "racyCheckOk",
-    "po_token": "poToken",
-    "service_integrity_dimensions": "serviceIntegrityDimensions",
-    "playability_status": "playabilityStatus",
-    "status": "status",
-    "streaming_data": "streamingData",
-    "video_details": "videoDetails",
-    "adaptive_formats": "adaptiveFormats",
-    "formats": "formats",
-    "mime_type": "mimeType",
-    "bitrate": "bitrate",
-    "quality_label": "qualityLabel",
-    "quality": "quality",
-    "url": "url",
-    "signature_cipher": "signatureCipher",
-    "cipher": "cipher",
-    "s": "s",
-    "sp": "sp",
-    "title": "title",
-    "author": "author",
-    "thumbnail": "thumbnail",
-    "thumbnails": "thumbnails",
-    "length_seconds": "lengthSeconds",
-    "runs": "runs",
-    "text": "text",
-    "query": "query",
-    "continuation": "continuation",
-    "browse_id": "browseId",
-    "fe_trending": "FEtrending",
-    "on_response_received_commands": "onResponseReceivedCommands",
-    "append_continuation_items_action": "appendContinuationItemsAction",
-    "continuation_items": "continuationItems",
-    "continuation_item_renderer": "continuationItemRenderer",
-    "continuation_endpoint": "continuationEndpoint",
-    "continuation_command": "continuationCommand",
-    "token": "token",
-    "contents": "contents",
-    "two_column_search_results_renderer": "twoColumnSearchResultsRenderer",
-    "primary_contents": "primaryContents",
-    "section_list_renderer": "sectionListRenderer",
-    "video_renderer": "videoRenderer",
-    "compact_video_renderer": "compactVideoRenderer",
-    "item_section_renderer": "itemSectionRenderer",
-    "long_byline_text": "longBylineText",
-    "length_text": "lengthText",
-    "simple_text": "simpleText",
-    "view_count_text": "viewCountText",
-    "two_column_browse_results_renderer": "twoColumnBrowseResultsRenderer",
-    "tabs": "tabs",
-    "tab_renderer": "tabRenderer",
-    "rich_grid_renderer": "richGridRenderer",
-    "rich_item_renderer": "richItemRenderer",
-    "content": "content",
-    "rich_section_renderer": "richSectionRenderer",
-    "rich_shelf_renderer": "richShelfRenderer",
-    "status_ok": "OK",
-    "status_age_required": "AGE_VERIFICATION_REQUIRED",
-    "cdn_patterns": [
-      "gvideo",
-      "ggpht",
-      "googlevideo",
-      "googleusercontent"
-    ],
-    "p_clen": "clen",
-    "p_expire": "expire",
-    "p_range": "range",
-    "p_rn": "rn",
-    "p_rbuf": "rbuf",
-    "p_n": "n",
-    "p_rn_val": "1",
-    "p_rbuf_val": "0"
-  },
-  "clients": [
-    {
-      "name": "IOS",
-      "version": "19.45.4",
-      "id": "5",
-      "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
-      "ctx": {
-        "deviceMake": "Apple",
-        "deviceModel": "iPhone16,2",
-        "osName": "iOS",
-        "osVersion": "18.1.0",
-        "userInterfaceTheme": "USER_INTERFACE_THEME_DARK"
-      },
-      "hdr": {}
-    },
-    {
-      "name": "ANDROID",
-      "version": "19.44.38",
-      "id": "3",
-      "ua": "com.google.android.youtube/19.44.38(Linux; U; Android 14; en_US; sdk_gphone64_arm64 Build/UPB4.230922.005;+) gzip",
-      "ctx": {
-        "androidSdkVersion": 34,
-        "osName": "Android",
-        "osVersion": "14",
-        "deviceMake": "Google",
-        "deviceModel": "sdk_gphone64_arm64",
-        "userInterfaceTheme": "USER_INTERFACE_THEME_DARK"
-      },
-      "hdr": {}
-    },
-    {
-      "name": "TVHTML5",
-      "version": "7.20250430.18.00",
-      "id": "7",
-      "ua": "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version",
-      "ctx": {
-        "clientFormFactor": "LARGE_FORM_FACTOR"
-      },
-      "hdr": {
-        "Origin": "https://www.youtube.com",
-        "Referer": "https://www.youtube.com/"
-      }
+=== YoutubeExtractor.kt ===
+package com.ultramp3.app.data.repository
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
+
+/**
+ * Dışa açık stream çözümleyici.
+ * Tüm kirli iş InnertubeEngine içinde — burası sadece suspend wrapper.
+ */
+@Singleton
+class YoutubeExtractor @Inject constructor(
+    private val engine: InnertubeEngine
+) {
+    // CookieHarvester bu property'lere yazar
+    var cookieHeader: String
+        get() = engine.cookie
+        set(v) { engine.cookie = v }
+
+    var visitorData: String
+        get() = engine.visitorData
+        set(v) { engine.visitorData = v }
+
+    var poToken: String
+        get() = engine.poToken
+        set(v) { engine.poToken = v }
+
+    suspend fun getStreams(videoId: String): YoutubeStreams = withContext(Dispatchers.IO) {
+        val r = engine.resolve(videoId)
+        YoutubeStreams(
+            title        = r.title,
+            author       = r.author,
+            lengthSeconds = r.durationSeconds,
+            viewCount    = 0L,
+            thumbnailUrl = r.thumbnailUrl,
+            audioFormats = r.audioFormats.map { AudioFormat(it.url, it.bitrate, it.mime) },
+            videoFormats = r.videoFormats.map { VideoFormat(it.url, it.quality, it.hasAudio, it.audioUrl) }
+        )
     }
-  ]
+
+    data class AudioFormat(val url: String, val bitrate: Int, val mimeType: String)
+    data class VideoFormat(val url: String, val quality: String, val hasAudio: Boolean, val audioUrl: String?)
+    data class YoutubeStreams(
+        val title: String, val author: String,
+        val lengthSeconds: Long, val viewCount: Long, val thumbnailUrl: String,
+        val audioFormats: List<AudioFormat>, val videoFormats: List<VideoFormat>
+    )
+}
+
+=== InnertubeEngine.kt ===
+package com.ultramp3.app.data.repository
+
+import android.util.Log
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
+import org.json.JSONObject
+import java.net.URLDecoder
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class InnertubeEngine @Inject constructor(private val http: OkHttpClient) {
+
+    private val TAG = "InnertubeEngine"
+
+    @Volatile var cookie: String      = ""
+    @Volatile var visitorData: String = ""
+    @Volatile var poToken: String     = ""
+
+    data class StreamResult(
+        val title: String,
+        val author: String,
+        val thumbnailUrl: String,
+        val durationSeconds: Long,
+        val bestAudioUrl: String,
+        val audioFormats: List<AudioFmt>,
+        val videoFormats: List<VideoFmt>
+    )
+    data class AudioFmt(val url: String, val bitrate: Int, val mime: String)
+    data class VideoFmt(val url: String, val quality: String, val hasAudio: Boolean, val audioUrl: String?)
+
+    private data class Client(
+        val name: String, val version: String, val id: String,
+        val ua: String, val key: String = DEFAULT_KEY,
+        val endpoint: String = DEFAULT_ENDPOINT,
+        val ctx: Map<String, Any> = emptyMap(),
+        val headers: Map<String, String> = emptyMap()
+    )
+
+    private companion object {
+        const val DEFAULT_ENDPOINT = "https://www.youtube.com/youtubei/v1/player"
+        const val DEFAULT_KEY      = "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w"
+        const val IOS_KEY          = "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc"
+    }
+
+    private val clients = listOf(
+        // IOS: direkt URL verir, cipher yok, throttle en az — 1. öncelik
+        Client("IOS", "19.45.4", "5",
+            "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
+            key = IOS_KEY,
+            ctx = mapOf("deviceMake" to "Apple", "deviceModel" to "iPhone16,2",
+                        "osName" to "iOS", "osVersion" to "18.1.0")),
+        // ANDROID_TESTSUITE: cipher bypass için en güçlü — 2. öncelik
+        Client("ANDROID_TESTSUITE", "1.9", "30",
+            "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
+            ctx = mapOf("androidSdkVersion" to 30, "osName" to "Android", "osVersion" to "11")),
+        // ANDROID_VR — 3. öncelik
+        Client("ANDROID_VR", "1.56.21", "28",
+            "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
+            ctx = mapOf("androidSdkVersion" to 32, "osName" to "Android", "osVersion" to "12L",
+                        "deviceMake" to "Oculus", "deviceModel" to "Quest 3")),
+        Client("ANDROID", "19.44.38", "3",
+            "com.google.android.youtube/19.44.38 (Linux; U; Android 11; Pixel 5) gzip",
+            ctx = mapOf("androidSdkVersion" to 30, "osName" to "Android", "osVersion" to "11")),
+        // WEB_EMBEDDED: cipher var ama çözülebilir — 5. öncelik
+        Client("WEB_EMBEDDED_PLAYER", "2.20231121.08.00", "56",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            ctx = mapOf("clientFormFactor" to "UNKNOWN_FORM_FACTOR"),
+            headers = mapOf("Origin" to "https://www.youtube.com", "Referer" to "https://www.youtube.com/")),
+        Client("TVHTML5_SIMPLY_EMBEDDED_PLAYER", "2.0", "85",
+            "Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0) AppleWebKit/538.1 (KHTML, like Gecko) Version/6.0 TV Safari/538.1",
+            ctx = mapOf("clientFormFactor" to "UNKNOWN_FORM_FACTOR"),
+            headers = mapOf("Origin" to "https://www.youtube.com", "Referer" to "https://www.youtube.com/")),
+        Client("ANDROID_CREATOR", "24.45.100", "14",
+            "com.google.android.apps.youtube.creator/24.45.100 (Linux; U; Android 11) gzip",
+            ctx = mapOf("androidSdkVersion" to 30))
+    )
+
+    fun resolve(videoId: String): StreamResult {
+        var lastErr = ""
+        var cipherResult: StreamResult? = null  // cipher'lı sonucu sakla, direkt URL yoksa kullan
+
+        for (c in clients) {
+            try {
+                val r = tryClient(videoId, c) ?: continue
+                // Direkt URL varsa (cipher değil) hemen kullan
+                val hasDirect = r.audioFormats.any { !it.url.contains("signature") && it.url.isNotBlank() }
+                if (hasDirect) {
+                    Log.d(TAG, "✓ ${c.name} (direkt URL)")
+                    return r
+                }
+                // Cipher'lı — sakla, daha iyi client yoksa kullan
+                if (cipherResult == null) {
+                    Log.d(TAG, "~ ${c.name} (cipher'lı, daha iyi aranıyor...)")
+                    cipherResult = r
+                }
+            } catch (e: Exception) {
+                lastErr = "${c.name}: ${e.message}"
+                Log.d(TAG, "✗ $lastErr")
+            }
+        }
+
+        // Direkt URL bulunamadı — cipher'lı sonucu kullan
+        if (cipherResult != null) {
+            Log.d(TAG, "⚠ cipher'lı sonuç kullanılıyor")
+            return cipherResult
+        }
+
+        throw Exception("Stream alınamadı — lütfen tekrar deneyin")
+    }
+
+    private fun tryClient(videoId: String, c: Client): StreamResult? {
+        val ctx = mutableMapOf<String, Any>(
+            "clientName" to c.name, "clientVersion" to c.version,
+            "hl" to "en", "gl" to "US", "utcOffsetMinutes" to 0
+        ).apply {
+            putAll(c.ctx)
+            if (visitorData.isNotBlank()) put("visitorData", visitorData)
+        }
+
+        val body = JSONObject().apply {
+            put("videoId", videoId)
+            put("context", JSONObject(mapOf("client" to JSONObject(ctx as Map<*, *>))))
+            put("contentCheckOk", true)
+            put("racyCheckOk", true)
+            if (poToken.isNotBlank())
+                put("serviceIntegrityDimensions", JSONObject().put("poToken", poToken))
+        }.toString().toRequestBody("application/json".toMediaType())
+
+        val url     = "${c.endpoint}?key=${c.key}&prettyPrint=false"
+        val origin  = c.headers["Origin"]  ?: "https://www.youtube.com"
+        val referer = c.headers["Referer"] ?: "https://www.youtube.com/watch?v=$videoId"
+
+        val req = Request.Builder().url(url).post(body)
+            .header("Content-Type",              "application/json")
+            .header("User-Agent",                c.ua)
+            .header("X-YouTube-Client-Name",     c.id)
+            .header("X-YouTube-Client-Version",  c.version)
+            .header("X-Goog-Api-Format-Version", "1")
+            .header("Accept-Language",           "en-US,en;q=0.9")
+            .header("Origin",                    origin)
+            .header("Referer",                   referer)
+            .apply {
+                if (cookie.isNotBlank()) header("Cookie", cookie)
+                c.headers.forEach { (k, v) -> if (k != "Origin" && k != "Referer") header(k, v) }
+            }.build()
+
+        val resp = http.newCall(req).execute()
+        if (!resp.isSuccessful) throw Exception("HTTP ${resp.code}")
+
+        val json   = JSONObject(resp.body!!.string())
+        val status = json.optJSONObject("playabilityStatus")?.optString("status") ?: "UNKNOWN"
+        if (status in listOf("LOGIN_REQUIRED", "UNPLAYABLE", "ERROR")) return null
+        if (status == "AGE_VERIFICATION_REQUIRED") throw Exception("Yaş doğrulaması gerekiyor")
+
+        val sd = json.optJSONObject("streamingData") ?: return null
+        val vd = json.optJSONObject("videoDetails")
+
+        val audio = mutableListOf<AudioFmt>()
+        val video = mutableListOf<VideoFmt>()
+
+        // ── 1. Tüm ses stream'lerini topla ──────────────────────────────
+        fun collectAudio(arr: JSONArray?) {
+            if (arr == null) return
+            for (i in 0 until arr.length()) {
+                val f = arr.getJSONObject(i)
+                val mime = f.optString("mimeType", "")
+                val u = extractUrl(f) ?: continue
+                if (mime.startsWith("audio/")) audio.add(AudioFmt(u, f.optInt("bitrate", 0), mime))
+            }
+        }
+        collectAudio(sd.optJSONArray("adaptiveFormats"))
+        collectAudio(sd.optJSONArray("formats"))
+
+        if (audio.isEmpty()) return null
+
+        // AAC/mp4 ses formatını tercih et — webm/opus ffmpeg-kit-min-gpl ile çalışmaz
+        val sorted = audio.sortedByDescending { it.bitrate }
+        val aacAudio = audio.filter { it.mime.contains("mp4") || it.mime.contains("aac") || it.mime.contains("m4a") }
+            .sortedByDescending { it.bitrate }
+        val bestAudio = (aacAudio.ifEmpty { sorted }).first()
+        val bestAudioUrl = bestAudio.url
+
+        // ── 2. Video stream'leri ─────────────────────────────────────────
+        // adaptiveFormats: video ve ses AYRI (480p+) → hasAudio=false, audioUrl=bestAudioUrl
+        // formats: video+ses BİRLEŞİK (360p/240p)   → hasAudio=true,  audioUrl=null
+        //
+        // Her kalite label'ı için codec önceliği: video/mp4 (AVC/H.264) > video/webm (VP9)
+        // ffmpeg-kit-min-gpl her ikisini de mux edebilir ama mp4 daha uyumlu
+
+        // label → (url, mime, hasAudio, audioUrl) — mp4 varsa webm'i ezer
+        data class VEntry(val url: String, val mime: String, val hasAudio: Boolean, val audioUrl: String?)
+        val videoMap = mutableMapOf<String, VEntry>()
+
+        fun isMp4Video(mime: String) = mime.contains("video/mp4") || mime.contains("avc") || mime.contains("h264")
+
+        val adaptArr = sd.optJSONArray("adaptiveFormats")
+        if (adaptArr != null) {
+            for (i in 0 until adaptArr.length()) {
+                val f    = adaptArr.getJSONObject(i)
+                val mime = f.optString("mimeType", "")
+                if (!mime.startsWith("video/")) continue
+                val u = extractUrl(f) ?: continue
+                val q = f.optString("qualityLabel", f.optString("quality", "?"))
+                val existing = videoMap[q]
+                // mp4/avc yoksa veya mevcut webm ise mp4 ile değiştir
+                if (existing == null || (!isMp4Video(existing.mime) && isMp4Video(mime))) {
+                    videoMap[q] = VEntry(u, mime, hasAudio = false, audioUrl = bestAudioUrl)
+                }
+            }
+        }
+        val formatsArr = sd.optJSONArray("formats")
+        if (formatsArr != null) {
+            for (i in 0 until formatsArr.length()) {
+                val f    = formatsArr.getJSONObject(i)
+                val mime = f.optString("mimeType", "")
+                if (!mime.startsWith("video/")) continue
+                val u = extractUrl(f) ?: continue
+                val q = f.optString("qualityLabel", f.optString("quality", "?"))
+                val existing = videoMap[q]
+                if (existing == null || (!isMp4Video(existing.mime) && isMp4Video(mime))) {
+                    videoMap[q] = VEntry(u, mime, hasAudio = true, audioUrl = null)
+                }
+            }
+        }
+
+        videoMap.forEach { (q, e) ->
+            video.add(VideoFmt(e.url, q, e.hasAudio, e.audioUrl))
+        }
+
+        return StreamResult(
+            title           = vd?.optString("title") ?: "",
+            author          = vd?.optString("author") ?: "",
+            thumbnailUrl    = vd?.optJSONObject("thumbnail")
+                ?.optJSONArray("thumbnails")?.let { t ->
+                    t.getJSONObject((t.length() - 1).coerceAtLeast(0)).optString("url")
+                } ?: "",
+            durationSeconds = vd?.optString("lengthSeconds")?.toLongOrNull() ?: 0L,
+            bestAudioUrl    = bestAudioUrl,
+            audioFormats    = sorted,
+            videoFormats    = video.sortedByDescending {
+                Regex("(\\d+)").find(it.quality)?.groupValues?.get(1)?.toIntOrNull() ?: 0
+            }
+        )
+    }
+
+    // Preview için sadece en düşük bitrateli AAC URL — video parse yok, retry yok
+    fun resolvePreviewUrl(videoId: String): String {
+        for (c in clients.take(2)) {
+            try {
+                val url = tryPreviewOnly(videoId, c)
+                if (url != null) return url
+            } catch (_: Exception) {}
+        }
+        return resolve(videoId).bestAudioUrl
+    }
+
+    private fun tryPreviewOnly(videoId: String, c: Client): String? {
+        val ctx = mutableMapOf<String, Any>(
+            "clientName" to c.name, "clientVersion" to c.version,
+            "hl" to "en", "gl" to "US", "utcOffsetMinutes" to 0
+        ).apply { putAll(c.ctx) }
+        val body = JSONObject().apply {
+            put("videoId", videoId)
+            put("context", JSONObject(mapOf("client" to JSONObject(ctx as Map<*, *>))))
+            put("contentCheckOk", true); put("racyCheckOk", true)
+        }.toString().toRequestBody("application/json".toMediaType())
+        val req = Request.Builder()
+            .url("${c.endpoint}?key=${c.key}&prettyPrint=false").post(body)
+            .header("Content-Type", "application/json")
+            .header("User-Agent", c.ua)
+            .header("X-YouTube-Client-Name", c.id)
+            .header("X-YouTube-Client-Version", c.version)
+            .build()
+        val resp = http.newCall(req).execute()
+        if (!resp.isSuccessful) return null
+        val json = JSONObject(resp.body!!.string())
+        if (json.optJSONObject("playabilityStatus")?.optString("status") != "OK") return null
+        val adaptArr = json.optJSONObject("streamingData")?.optJSONArray("adaptiveFormats") ?: return null
+        var bestUrl: String? = null
+        var bestBitrate = Int.MAX_VALUE
+        for (i in 0 until adaptArr.length()) {
+            val f = adaptArr.getJSONObject(i)
+            val mime = f.optString("mimeType", "")
+            if (!mime.startsWith("audio/mp4") && !mime.contains("aac")) continue
+            val bitrate = f.optInt("bitrate", Int.MAX_VALUE)
+            val url = extractUrl(f) ?: continue
+            if (bitrate < bestBitrate) { bestBitrate = bitrate; bestUrl = url }
+        }
+        return bestUrl
+    }
+
+    private fun extractUrl(f: JSONObject): String? {
+        // 1) Direkt URL — en yaygın durum (IOS, ANDROID_TESTSUITE vs.)
+        f.optString("url", "").takeIf { it.isNotBlank() }?.let { return it }
+
+        // 2) signatureCipher / cipher — WEB ve bazı diğer clientlarda gelir
+        // Format: "url=URL_ENCODED&sp=sig&s=OBFUSCATED_SIG"
+        val cipher = f.optString("signatureCipher", "").ifBlank { f.optString("cipher", "") }
+        if (cipher.isBlank()) return null
+
+        val params = cipher.split("&").associate {
+            val kv = it.split("=", limit = 2)
+            if (kv.size == 2) kv[0] to URLDecoder.decode(kv[1], "UTF-8") else kv[0] to ""
+        }
+
+        val baseUrl = params["url"]?.takeIf { it.isNotBlank() } ?: return null
+        val sig     = params["s"]?.takeIf { it.isNotBlank() }
+        val sp      = params["sp"]?.ifBlank { "signature" } ?: "signature"
+
+        // sig varsa URL'e ekle — obfuscation bypass: YouTube mobil clientlarda
+        // "s" parametresi çoğu zaman zaten decode edilmiş halde gelir.
+        // JavaScript deobfuscation gerekmeyen clientlar (IOS/ANDROID) önce deneniyor;
+        // buraya düşüldüyse sig'i olduğu gibi ekle — bazı videolarda çalışır.
+        return if (sig != null) {
+            val sep = if (baseUrl.contains('?')) "&" else "?"
+            "$baseUrl$sep$sp=$sig"
+        } else {
+            baseUrl
+        }
+    }
+}
+
+=== StreamRepository.kt ===
+package com.ultramp3.app.data.repository
+
+import android.util.Log
+import com.ultramp3.app.data.model.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.ServiceList
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class StreamRepository @Inject constructor(
+    private val ytExtractor: YoutubeExtractor,
+    private val cookieHarvester: YoutubeCookieHarvester,
+    private val engine: InnertubeEngine
+) {
+    private val TAG = "StreamRepo"
+    private val svc get() = NewPipe.getService(ServiceList.YouTube.serviceId)
+
+    // Preview için sadece AAC URL — çok hafif, retry yok
+    suspend fun getPreviewUrl(url: String): Result<String> = withContext(Dispatchers.IO) {
+        runCatching { engine.resolvePreviewUrl(extractId(url)) }
+    }
+
+    // Arama hâlâ NewPipe ile (arama API'si çalışıyor)
+    // nextPage token cache — query → nextPage
+    private val searchPageCache = mutableMapOf<String, org.schabi.newpipe.extractor.Page?>()
+    private val searchExtractorCache = mutableMapOf<String, org.schabi.newpipe.extractor.search.SearchExtractor>()
+
+    suspend fun search(query: String): Result<List<StreamItem>> = withContext(Dispatchers.IO) {
+        retry(3) {
+            val ext = svc.getSearchExtractor(query)
+            ext.fetchPage()
+            searchExtractorCache[query] = ext
+            val page = ext.initialPage
+            searchPageCache[query] = page.nextPage
+            page.items.filterIsInstance<StreamInfoItem>().map { it.toItem() }
+        }
+    }
+
+    suspend fun searchNextPage(query: String): Result<List<StreamItem>> = withContext(Dispatchers.IO) {
+        val ext = searchExtractorCache[query]
+        val nextPage = searchPageCache[query]
+        if (ext == null || nextPage == null) return@withContext Result.success(emptyList())
+        retry(2) {
+            val page = ext.getPage(nextPage)
+            searchPageCache[query] = page.nextPage
+            page.items.filterIsInstance<StreamInfoItem>().map { it.toItem() }
+        }
+    }
+
+    fun hasNextPage(query: String): Boolean = searchPageCache[query] != null
+
+    fun clearSearchCache(query: String) {
+        searchPageCache.remove(query)
+        searchExtractorCache.remove(query)
+    }
+
+    suspend fun getTrending(): Result<List<StreamItem>> = withContext(Dispatchers.IO) {
+        retry(2) {
+            val ext = svc.kioskList.getExtractorById("Trending", null); ext.fetchPage()
+            ext.initialPage.items.filterIsInstance<StreamInfoItem>().take(20).map { it.toItem() }
+        }
+    }
+
+    // Stream bilgisi Innertube API ile (ANDROID_VR öncelikli + cookie desteği)
+    suspend fun getStreamInfo(url: String): Result<StreamInfo> = withContext(Dispatchers.IO) {
+        retry(3) { attempt ->
+            Log.d(TAG, "getStreamInfo (Innertube): $url")
+            val videoId = extractId(url)
+
+            // 2. denemede cookie'leri sıfırla ve yeniden çek
+            if (attempt == 1) {
+                Log.w(TAG, "İlk deneme başarısız, cookie sıfırlanıyor...")
+                cookieHarvester.reset()
+            }
+
+            val streams = ytExtractor.getStreams(videoId)
+            if (streams.audioFormats.isEmpty()) throw Exception("Ses akisi bulunamadi")
+
+            // AAC/mp4 formatini tercih et
+            val aacFormats = streams.audioFormats.filter {
+                it.mimeType.contains("mp4") || it.mimeType.contains("aac") || it.mimeType.contains("m4a")
+            }.sortedByDescending { it.bitrate }
+            
+            // 128kbps stream seç (hızlı + güvenilir)
+            val bestAudio = aacFormats.firstOrNull { it.bitrate in 120000..136000 }
+                ?: aacFormats.firstOrNull { it.bitrate in 96000..160000 }
+                ?: aacFormats.firstOrNull { it.bitrate >= 64000 }
+                ?: aacFormats.firstOrNull()
+                ?: streams.audioFormats.first()
+            Log.d(TAG, "Stream 128k: ${bestAudio.bitrate}bps — ${bestAudio.mimeType}")
+
+            StreamInfo(
+                id           = videoId,
+                title        = streams.title,
+                uploaderName = streams.author,
+                thumbnailUrl = streams.thumbnailUrl,
+                duration     = streams.lengthSeconds,
+                viewCount    = streams.viewCount,
+                bestAudioUrl = bestAudio.url,
+                audioStreams  = (aacFormats.ifEmpty { streams.audioFormats }).map {
+                    AudioStreamOption(it.url, it.bitrate, it.mimeType)
+                },
+                videoStreams  = streams.videoFormats.map {
+                    VideoQualityOption(it.quality, it.url, it.hasAudio, it.audioUrl)
+                }
+            )
+        }
+    }
+
+    private fun StreamInfoItem.toItem() = StreamItem(
+        extractId(url), name, uploaderName ?: "", duration, viewCount,
+        thumbnails.firstOrNull()?.url ?: "", url
+    )
+
+    private fun extractId(url: String): String =
+        Regex("(?:v=|youtu\\.be/|/embed/|/shorts/)([a-zA-Z0-9_-]{11})")
+            .find(url)?.groupValues?.get(1) ?: url.takeLast(11)
+
+    // attempt parametresiyle genişletilmiş retry
+    private suspend fun <T> retry(n: Int, block: suspend (attempt: Int) -> T): Result<T> {
+        var ex: Exception? = null
+        repeat(n) { i ->
+            try { return Result.success(block(i)) }
+            catch (e: Exception) {
+                ex = e
+                Log.w(TAG, "Deneme ${i + 1}/$n: ${e.message}")
+                if (i < n - 1) delay((i + 1) * 1500L)
+            }
+        }
+        return Result.failure(ex ?: Exception("Bilinmeyen hata"))
+    }
+}
+
+=== YoutubeCookieHarvester.kt ===
+package com.ultramp3.app.data.repository
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
+import android.webkit.*
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
+import javax.inject.Inject
+import javax.inject.Singleton
+
+/**
+ * Uygulama açılırken arka planda sessizce çalışır.
+ * Görünmez WebView ile YouTube cookie'lerini çeker,
+ * InnertubeEngine'e yükler. Kullanıcı hiçbir şey görmez.
+ */
+@Singleton
+class YoutubeCookieHarvester @Inject constructor(
+    @ApplicationContext private val ctx: Context,
+    private val engine: InnertubeEngine
+) {
+    private val TAG = "CookieHarvester"
+    private var done = false
+
+    @SuppressLint("SetJavaScriptEnabled")
+    fun start(scope: CoroutineScope) {
+        if (done) return
+        scope.launch(Dispatchers.Main) {
+            try {
+                CookieManager.getInstance().setAcceptCookie(true)
+
+                val wv = WebView(ctx).apply {
+                    settings.apply {
+                        javaScriptEnabled   = true
+                        domStorageEnabled    = true
+                        blockNetworkImage    = true  // sadece veri, görsel yok
+                        userAgentString      = "Mozilla/5.0 (Linux; Android 11; Pixel 5) " +
+                            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
+                    }
+                }
+
+                val ready = CompletableDeferred<Unit>()
+
+                wv.webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView, url: String) {
+                        if (!url.contains("youtube.com") || ready.isCompleted) return
+                        val raw = CookieManager.getInstance().getCookie("https://www.youtube.com") ?: ""
+                        if (raw.isBlank()) return
+                        engine.cookie = raw
+                        view.evaluateJavascript(
+                            "window.ytcfg?.get('VISITOR_DATA') || ''"
+                        ) { vd ->
+                            val v = vd?.trim('"') ?: ""
+                            if (v.isNotBlank() && v != "null") engine.visitorData = v
+                            done = true
+                            Log.d(TAG, "Cookie hazır ✓")
+                            ready.complete(Unit)
+                        }
+                    }
+                }
+
+                wv.loadUrl("https://www.youtube.com")
+                withTimeoutOrNull(12_000L) { ready.await() }
+                wv.destroy()
+
+            } catch (e: Exception) {
+                Log.d(TAG, "Cookie hasatı sessizce atlandı: ${e.message}")
+            }
+        }
+    }
+
+    fun reset() {
+        done = false
+        engine.cookie = ""
+        engine.visitorData = ""
+        engine.poToken = ""
+    }
+}
+
+=== DownloadRepository.kt ===
+package com.ultramp3.app.data.repository
+
+import android.content.ContentValues
+import android.content.Context
+import android.media.MediaScannerConnection
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.ReturnCode
+import com.ultramp3.app.data.model.*
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.io.FileOutputStream
+import java.io.RandomAccessFile
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class DownloadRepository @Inject constructor(
+    @ApplicationContext private val ctx: Context,
+    private val dao: DownloadDao,
+    private val client: OkHttpClient,
+    private val streamRepo: StreamRepository
+) {
+    private val TAG = "DownloadRepo"
+    val allDownloads = dao.getAll()
+
+    /**
+     * İndirme için özel OkHttpClient.
+     * - Dispatcher: maxRequests=32, maxRequestsPerHost=16
+     *   → 8 chunk aynı anda gerçekten paralel çalışır (default 5'te boğulmuyor)
+     * - ConnectionPool: 16 bağlantı, 10 dk canlı tut → chunk'lar bağlantıyı paylaşır
+     * - readTimeout=0 → 150dk'lık dosya için zaman aşımı yok
+     * - retryOnConnectionFailure=true → geçici kopmalar otomatik yeniden bağlanır
+     */
+    private val dlClient: OkHttpClient = run {
+        val dispatcher = okhttp3.Dispatcher().apply {
+            maxRequests = 32
+            maxRequestsPerHost = 16
+        }
+        client.newBuilder()
+            .dispatcher(dispatcher)
+            .connectionPool(okhttp3.ConnectionPool(16, 10, TimeUnit.MINUTES))
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(0, TimeUnit.SECONDS)
+            .writeTimeout(0, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .build()
+    }
+
+    suspend fun insertDownload(item: DownloadItem): Long = dao.insert(item)
+    suspend fun updateProgress(id: Int, p: Int, s: DownloadStatus) = dao.updateProgress(id, p, s)
+    suspend fun markCompleted(id: Int, path: String) =
+        dao.markCompleted(id, DownloadStatus.COMPLETED, path, System.currentTimeMillis())
+    suspend fun markFailed(id: Int) = dao.updateProgress(id, 0, DownloadStatus.FAILED)
+    suspend fun deleteDownload(item: DownloadItem) = dao.delete(item)
+    suspend fun resetForRetry(id: Int) = dao.resetForRetry(id)
+    suspend fun markStaleDownloadsFailed() = dao.markStaleDownloadsFailed()
+
+    // ── Ses İndir ─────────────────────────────────────────────────────
+    suspend fun downloadAudioDirect(
+        item: StreamItem, audioUrl: String, quality: AudioQuality,
+        onProgress: (Int) -> Unit
+    ): Result<File> = withContext(Dispatchers.IO) {
+        runCatching {
+            val title = sanitize(item.title)
+            Log.d(TAG, "═══ SES İNDİRME BAŞLADI ═══  ${item.title}")
+
+            val resolvedUrl: String = when {
+                audioUrl.isBlank() || isUrlExpired(audioUrl) -> {
+                    Log.d(TAG, "  audioUrl expire/boş — taze URL çekiliyor...")
+                    val info = streamRepo.getStreamInfo(item.streamUrl).getOrThrow()
+                    info.bestAudioUrl ?: throw Exception("Stream URL alınamadı")
+                }
+                else -> audioUrl
+            }
+
+            val aacTmp = tmpFile("a_$title", "m4a")
+            var lastErr: Exception? = null
+
+            for (attempt in 0..2) {
+                try {
+                    aacTmp.delete()
+                    Log.d(TAG, "  [SES] deneme ${attempt + 1}/3")
+                    downloadWithResume(resolvedUrl, aacTmp, onProgress, progressRange = 1..98)
+                    if (aacTmp.exists() && aacTmp.length() > 1024L) {
+                        Log.d(TAG, "  [SES] ✓ ${aacTmp.length() / 1024}KB")
+                        lastErr = null
+                        break
+                    }
+                    lastErr = Exception("Dosya boş geldi")
+                } catch (e: Exception) {
+                    lastErr = e
+                    Log.e(TAG, "  [SES] ✗ deneme ${attempt + 1}: ${e.message}")
+                    if (attempt < 2) Thread.sleep(2000L * (attempt + 1))
+                }
+            }
+
+            lastErr?.let { throw Exception("Ses indirilemedi: ${it.message}", it) }
+            check(aacTmp.exists() && aacTmp.length() > 0L) { "Ses dosyası boş" }
+            onProgress(99)
+            aacTmp
+        }
+    }
+
+    // ── Video İndir ───────────────────────────────────────────────────
+    suspend fun downloadVideo(
+        item: StreamItem, option: VideoQualityOption,
+        onProgress: (Int) -> Unit
+    ): Result<File> = withContext(Dispatchers.IO) {
+        runCatching {
+            val title = sanitize(item.title)
+            val needsMux = !option.hasAudio && option.audioUrl != null
+
+            if (isUrlExpired(option.url))
+                throw Exception("Video URL süresi dolmuş")
+            if (option.audioUrl != null && isUrlExpired(option.audioUrl))
+                throw Exception("Ses URL süresi dolmuş")
+
+            if (!needsMux) {
+                val dest = tmpFile("v_$title", "mp4")
+                downloadWithResume(option.url, dest, onProgress, progressRange = 1..99)
+                check(dest.exists() && dest.length() > 0L) { "Birleşik video boş" }
+                Log.d(TAG, "Video (birleşik) OK: ${dest.length() / 1024}KB")
+                return@runCatching dest
+            }
+
+            val audioUrl = option.audioUrl ?: throw Exception("Ses URL eksik")
+            val videoExt = when {
+                option.url.contains("mime=video%2Fwebm", ignoreCase = true) -> "webm"
+                option.url.contains("mime=video/webm",   ignoreCase = true) -> "webm"
+                option.url.contains(".webm",              ignoreCase = true) -> "webm"
+                else -> "mp4"
+            }
+            val videoTmp = tmpFile("vt_$title", videoExt)
+            val audioTmp = tmpFile("at_$title", "m4a")
+            val dest     = tmpFile("mx_$title", "mp4")
+
+            try {
+                val vDone = AtomicLong(0)
+                val aDone = AtomicLong(0)
+                Log.d(TAG, "Paralel indirme: ${option.label} ($videoExt + m4a)")
+
+                val pool = Executors.newFixedThreadPool(2)
+                val vFuture = pool.submit<Unit> {
+                    downloadWithResume(option.url, videoTmp,
+                        onProgress = { pct ->
+                            vDone.set(pct.toLong())
+                            val w = (vDone.get() * 0.9 + aDone.get() * 0.1).toInt()
+                            onProgress(w.coerceIn(1, 84))
+                        },
+                        progressRange = 1..84
+                    )
+                }
+                val aFuture = pool.submit<Unit> {
+                    downloadWithResume(audioUrl, audioTmp,
+                        onProgress = { pct ->
+                            aDone.set(pct.toLong())
+                            val w = (vDone.get() * 0.9 + aDone.get() * 0.1).toInt()
+                            onProgress(w.coerceIn(1, 84))
+                        },
+                        progressRange = 1..84
+                    )
+                }
+
+                // Timeout YOK — büyük video bitene kadar bekle
+                try {
+                    vFuture.get()
+                    aFuture.get()
+                } catch (e: Exception) {
+                    vFuture.cancel(true)
+                    aFuture.cancel(true)
+                    throw e
+                } finally {
+                    pool.shutdown()
+                    pool.awaitTermination(30, TimeUnit.SECONDS)
+                }
+
+                check(videoTmp.exists() && videoTmp.length() > 0L) { "Video parçası boş" }
+                check(audioTmp.exists() && audioTmp.length() > 0L) { "Ses parçası boş" }
+                Log.d(TAG, "İndirme tamam → mux: ${videoTmp.length()/1024}KB + ${audioTmp.length()/1024}KB")
+
+                onProgress(87)
+                ffmpegMux(videoTmp, audioTmp, dest)
+                onProgress(99)
+
+                check(dest.exists() && dest.length() > 0L) { "Mux çıktısı boş" }
+                Log.d(TAG, "Mux OK: ${dest.length()/1024}KB — ${option.label}")
+                dest
+            } catch (e: Exception) {
+                runCatching { videoTmp.delete() }
+                runCatching { audioTmp.delete() }
+                runCatching { dest.delete() }
+                throw e
+            }
+        }
+    }
+
+    // ── Ana indirme motoru ────────────────────────────────────────────
+    /**
+     * IDM tarzı: boyutu tespit et → paralel chunk (RandomAccessFile, birleştirme yok)
+     * → başarısız olursa tek akış fallback.
+     */
+    private fun downloadWithResume(
+        url: String,
+        dest: File,
+        onProgress: (Int) -> Unit,
+        progressRange: IntRange = 1..99
+    ) {
+        dest.parentFile?.mkdirs()
+        val tmpDest = File(dest.parent, "${dest.name}.tmp")
+        if (dest.exists()) dest.delete()
+        onProgress(progressRange.first)
+
+        if (isUrlExpired(url)) throw Exception("URL süresi dolmuş")
+
+        val isYT = isYouTubeUrl(url)
+
+        // Boyutu tespit et
+        var totalBytes = if (isYT) ytContentLength(url) else -1L
+
+        if (totalBytes <= 0L) {
+            totalBytes = runCatching {
+                dlClient.newCall(
+                    Request.Builder().url(url).head()
+                        .header("User-Agent", UA)
+                        .header("Accept-Encoding", "identity")
+                        .build()
+                ).execute().use { resp ->
+                    resp.header("Content-Length")?.toLongOrNull()
+                        ?: resp.header("content-length")?.toLongOrNull()
+                        ?: -1L
+                }
+            }.getOrElse { -1L }
+        }
+
+        if (totalBytes <= 0L && isYT) {
+            runCatching {
+                dlClient.newCall(
+                    Request.Builder().url(ytRangeUrl(url, 0, 0))
+                        .header("User-Agent", UA)
+                        .header("Accept-Encoding", "identity")
+                        .build()
+                ).execute().use { resp ->
+                    val cr = resp.header("Content-Range") ?: ""
+                    totalBytes = Regex("/(\\d+)$").find(cr)?.groupValues?.get(1)?.toLongOrNull()
+                        ?: resp.header("Content-Length")?.toLongOrNull()
+                        ?: -1L
+                }
+            }
+        }
+
+        Log.d(TAG, "  [DL] isYT=$isYT boyut=${if (totalBytes > 0) "${totalBytes/1024}KB" else "bilinmiyor"}")
+
+        if (totalBytes > 512 * 1024L) {
+            try {
+                downloadChunked(url, tmpDest, totalBytes, isYT, onProgress, progressRange)
+                val ratio = tmpDest.length().toDouble() / totalBytes
+                if (ratio < 0.98) {
+                    Log.w(TAG, "  Chunked eksik ${(ratio*100).toInt()}% → streaming fallback")
+                    tmpDest.delete()
+                    downloadStreaming(url, tmpDest, totalBytes, onProgress, progressRange)
+                } else {
+                    Log.d(TAG, "  ✓ Chunked: ${tmpDest.length()/1024}KB")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "  Chunked başarısız → streaming: ${e.message}")
+                tmpDest.delete()
+                downloadStreaming(url, tmpDest, totalBytes, onProgress, progressRange)
+            }
+        } else {
+            downloadStreaming(url, tmpDest, totalBytes, onProgress, progressRange)
+        }
+
+        check(tmpDest.exists() && tmpDest.length() > 0L) { "İndirme sonucu boş: ${dest.name}" }
+        tmpDest.renameTo(dest)
+        onProgress(progressRange.last)
+    }
+
+    /**
+     * N paralel chunk — RandomAccessFile ile doğrudan offset'e yaz.
+     * Birleştirme adımı YOK → büyük dosyalarda bellek baskısı yok.
+     * Her chunk 3 kez yeniden dener. Future.get() timeout'suz.
+     */
+    private fun downloadChunked(
+        url: String, dest: File, total: Long, isYT: Boolean,
+        onProgress: (Int) -> Unit, progressRange: IntRange
+    ) {
+        // YouTube rate limiting: 4 chunk optimal.
+        // 16 chunk → YouTube throttle eder (%35'ten %9'a düşer).
+        // 4 chunk → tam hızda, kararlı indirme.
+        val N = 4
+        val chunk = total / N
+        val done = AtomicLong(0)
+        val pRange = (progressRange.last - progressRange.first).toLong()
+
+        // Dosyayı tam boyuta önceden tahsis et
+        RandomAccessFile(dest, "rw").use { it.setLength(total) }
+
+        val pool = Executors.newFixedThreadPool(N)
+        val futures = (0 until N).map { i ->
+            val from = i.toLong() * chunk
+            val to   = if (i == N - 1) total - 1 else (i + 1).toLong() * chunk - 1
+            pool.submit<Unit> {
+                var attempt = 0
+                var lastErr: Exception? = null
+                while (attempt < 3) {
+                    try {
+                        val reqUrl = if (isYT) ytRangeUrl(url, from, to) else url
+                        val reqBuilder = Request.Builder().url(reqUrl)
+                            .header("User-Agent", UA)
+                            .header("Accept-Encoding", "identity")
+                        if (!isYT) reqBuilder.header("Range", "bytes=$from-$to")
+
+                        dlClient.newCall(reqBuilder.build()).execute().use { resp ->
+                            check(resp.code in 200..206) { "Chunk $i HTTP ${resp.code}" }
+                            val body = resp.body ?: throw Exception("Chunk $i boş body")
+                            RandomAccessFile(dest, "rw").use { raf ->
+                                raf.seek(from)
+                                val buf = ByteArray(1024 * 1024)  // 1MB buffer → daha az syscall, daha hızlı
+                                val stream = body.byteStream()
+                                var n = stream.read(buf)
+                                while (n >= 0) {
+                                    raf.write(buf, 0, n)
+                                    val pct = (done.addAndGet(n.toLong()) * pRange / total).toInt()
+                                    onProgress((progressRange.first + pct).coerceIn(progressRange.first, progressRange.last - 1))
+                                    n = stream.read(buf)
+                                }
+                            }
+                        }
+                        Log.d(TAG, "  Chunk $i OK ($from–$to)")
+                        lastErr = null
+                        break
+                    } catch (e: Exception) {
+                        attempt++
+                        lastErr = e
+                        Log.e(TAG, "  Chunk $i deneme $attempt: ${e.message}")
+                        if (attempt < 3) Thread.sleep(1500L * attempt)
+                    }
+                }
+                if (lastErr != null) throw Exception("Chunk $i başarısız: ${lastErr!!.message}")
+            }
+        }
+
+        try {
+            futures.forEach { it.get() }  // timeout YOK
+        } catch (e: Exception) {
+            futures.forEach { it.cancel(true) }
+            dest.delete()
+            throw Exception("Chunked indirme başarısız: ${e.message}", e)
+        } finally {
+            pool.shutdown()
+            pool.awaitTermination(30, TimeUnit.SECONDS)
+        }
+
+        val ratio = dest.length().toDouble() / total
+        if (ratio < 0.98) throw Exception("Chunked eksik: ${(ratio*100).toInt()}%")
+    }
+
+    /**
+     * Tek akış (fallback veya küçük dosya). 3 deneme hakkı.
+     */
+    private fun downloadStreaming(
+        url: String, dest: File, total: Long,
+        onProgress: (Int) -> Unit, progressRange: IntRange
+    ) {
+        val pRange = (progressRange.last - progressRange.first).toLong()
+        for (attempt in 0..2) {
+            try {
+                dlClient.newCall(
+                    Request.Builder().url(url)
+                        .header("User-Agent", UA)
+                        .header("Accept-Encoding", "identity")
+                        .header("Connection", "keep-alive")
+                        .build()
+                ).execute().use { resp ->
+                    check(resp.isSuccessful) { "HTTP ${resp.code}" }
+                    val body = resp.body ?: throw Exception("Boş body")
+                    val contentLen = total.takeIf { it > 0 }
+                        ?: resp.header("Content-Length")?.toLongOrNull() ?: -1L
+                    var received = 0L
+                    FileOutputStream(dest, false).use { out ->
+                        val buf = ByteArray(1024 * 1024)  // 1MB buffer
+                        val stream = body.byteStream()
+                        var n = stream.read(buf)
+                        while (n >= 0) {
+                            out.write(buf, 0, n)
+                            received += n
+                            if (contentLen > 0L) {
+                                val pct = (received * pRange / contentLen).toInt()
+                                onProgress((progressRange.first + pct).coerceIn(progressRange.first, progressRange.last - 1))
+                            }
+                            n = stream.read(buf)
+                        }
+                        out.flush()
+                    }
+                }
+                Log.d(TAG, "  ✓ Streaming: ${dest.length()/1024}KB")
+                return
+            } catch (e: Exception) {
+                dest.delete()
+                if (attempt >= 2) throw Exception("Streaming 3 denemede başarısız: ${e.message}", e)
+                Log.w(TAG, "  Streaming deneme ${attempt+1}: ${e.message}")
+                Thread.sleep(2000L * (attempt + 1))
+            }
+        }
+    }
+
+    // ── FFmpeg mux ────────────────────────────────────────────────────
+    private fun ffmpegMux(videoFile: File, audioFile: File, dest: File) {
+        if (dest.exists()) dest.delete()
+        val session = FFmpegKit.executeWithArguments(arrayOf(
+            "-y",
+            "-i",        videoFile.absolutePath,
+            "-i",        audioFile.absolutePath,
+            "-c",        "copy",
+            "-map",      "0:v:0",
+            "-map",      "1:a:0",
+            "-movflags", "+faststart",
+            dest.absolutePath
+        ))
+        videoFile.delete()
+        audioFile.delete()
+
+        val ok = ReturnCode.isSuccess(session.returnCode) && dest.exists() && dest.length() > 0L
+        if (!ok) {
+            dest.delete()
+            throw Exception("FFmpeg mux başarısız (rc=${session.returnCode?.value}): ${session.allLogsAsString?.takeLast(300)}")
+        }
+        Log.d(TAG, "  [FFmpeg mux] ✓ ${dest.length()/1024}KB")
+    }
+
+    // ── Kalıcı depolama ───────────────────────────────────────────────
+    suspend fun finalizeFile(file: File, ext: String): String = withContext(Dispatchers.IO) {
+        check(file.exists() && file.length() > 0L) { "Kayıt edilecek dosya yok: ${file.absolutePath}" }
+        val isVideo  = ext.equals("mp4", ignoreCase = true)
+        val fileName = if (file.name.contains(".")) file.name else "${file.name}.$ext"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            saveViaMediaStore(file, fileName, ext, isVideo)
+        else
+            saveViaFileSystem(file, fileName, isVideo)
+    }
+
+    @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.Q)
+    private fun saveViaMediaStore(src: File, fileName: String, ext: String, isVideo: Boolean): String {
+        val collection = if (isVideo)
+            MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        else
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val relPath = if (isVideo) "Movies/UltraMp3" else "Music/UltraMp3"
+        val mime = when (ext.lowercase()) {
+            "mp4" -> "video/mp4"; "m4a" -> "audio/mp4"; "mp3" -> "audio/mpeg"; else -> "audio/mpeg"
+        }
+        val baseName = fileName.substringBeforeLast(".")
+        val extension = fileName.substringAfterLast(".")
+        var finalFileName = fileName
+        var counter = 1
+        while (true) {
+            val exists = ctx.contentResolver.query(collection,
+                arrayOf(MediaStore.MediaColumns._ID),
+                "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=?",
+                arrayOf("$relPath/", finalFileName), null)?.use { it.moveToFirst() } ?: false
+            if (!exists) break
+            finalFileName = "$baseName (${++counter}).$extension"
+        }
+        val cv = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, finalFileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, mime)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "$relPath/")
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
+            if (!isVideo) { put(MediaStore.Audio.Media.TITLE, src.nameWithoutExtension); put(MediaStore.Audio.Media.IS_MUSIC, 1) }
+        }
+        val uri = ctx.contentResolver.insert(collection, cv)
+            ?: throw Exception("MediaStore insert null — depolama izni eksik")
+        try {
+            ctx.contentResolver.openOutputStream(uri, "w")!!.use { os ->
+                src.inputStream().use { it.copyTo(os, bufferSize = 512 * 1024) }
+            }
+            ctx.contentResolver.update(uri, ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) }, null, null)
+            src.delete()
+            Log.d(TAG, "✓ MediaStore: $relPath/$finalFileName")
+            return uri.toString()
+        } catch (e: Exception) {
+            runCatching { ctx.contentResolver.delete(uri, null, null) }
+            src.delete()
+            throw Exception("MediaStore yazma hatası: ${e.message}", e)
+        }
+    }
+
+    private fun saveViaFileSystem(src: File, fileName: String, isVideo: Boolean): String {
+        val dir = File(Environment.getExternalStoragePublicDirectory(
+            if (isVideo) Environment.DIRECTORY_MOVIES else Environment.DIRECTORY_MUSIC
+        ), "UltraMp3").also { it.mkdirs() }
+        val dest = File(dir, fileName).also { if (it.exists()) it.delete() }
+        src.copyTo(dest, overwrite = true); src.delete()
+        MediaScannerConnection.scanFile(ctx, arrayOf(dest.absolutePath), null, null)
+        Log.d(TAG, "✓ Dosya: ${dest.absolutePath}")
+        return dest.absolutePath
+    }
+
+    // ── Yardımcılar ───────────────────────────────────────────────────
+    private val UA = "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip"
+    private fun isYouTubeUrl(url: String) = url.contains("googlevideo.com") || url.contains("googleusercontent.com")
+    private fun ytContentLength(url: String) = Regex("[?&]clen=(\\d+)").find(url)?.groupValues?.get(1)?.toLongOrNull() ?: -1L
+    /**
+     * YouTube range URL oluştur.
+     * &n= parametresi YouTube'un throttle token'ı — decode edilmeden gönderilirse
+     * sunucu hızı 50-100KB/s'ye çeker (%35→%9 düşüşünün sebebi).
+     * IOS client URL'lerinde n genellikle yok; varsa kaldır.
+     * &rn=1&rbuf=0: "tam hız ver" sinyali.
+     */
+    private fun ytRangeUrl(url: String, from: Long, to: Long): String {
+        var cleaned = url
+            .replace(Regex("[?&]range=\\d+-\\d+"), "")
+            .replace(Regex("[?&]rn=\\d+"), "")
+            .replace(Regex("[?&]rbuf=\\d+"), "")
+            .replace(Regex("[?&]n=[^&]+"), "")   // throttle token — kaldır
+        val sep = if (cleaned.contains('?')) "&" else "?"
+        return "$cleaned${sep}range=$from-$to&rn=1&rbuf=0"
+    }
+    private fun isUrlExpired(url: String): Boolean {
+        val expire = Regex("[?&]expire=(\\d+)").find(url)?.groupValues?.get(1)?.toLongOrNull() ?: return false
+        return System.currentTimeMillis() / 1000 >= expire - 60
+    }
+    private fun tmpFile(name: String, ext: String): File {
+        val dir = File(ctx.cacheDir, "ultramp3_dl").also { it.mkdirs() }
+        return File(dir, "${name.take(60)}.$ext").also { if (it.exists()) it.delete() }
+    }
+    private fun sanitize(s: String) = s.replace(Regex("""[\\/:*?"<>|']"""), "_").trim().take(60).ifEmpty { "untitled" }
 }

@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "updated": "2026-05-14",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -43,7 +43,7 @@
         "name": "IOS",
         "version": "19.45.4",
         "id": "5",
-        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
         "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
         "ctx": {
           "deviceMake": "Apple",
@@ -161,7 +161,11 @@
     "minChunkSizeBytes": 524288,
     "expireToleranceSec": 60,
     "audioFormats": {
-      "preferredMimes": ["audio/mp4", "audio/aac", "audio/m4a"],
+      "preferredMimes": [
+        "audio/mp4",
+        "audio/aac",
+        "audio/m4a"
+      ],
       "targetBitrateMin": 120000,
       "targetBitrateMax": 136000,
       "fallbackBitrateMin": 96000,
@@ -169,7 +173,11 @@
       "minBitrate": 64000
     },
     "videoFormats": {
-      "preferredCodecs": ["video/mp4", "avc", "h264"],
+      "preferredCodecs": [
+        "video/mp4",
+        "avc",
+        "h264"
+      ],
       "outputDir": "UltraMp3",
       "audioOutputDir": "Music/UltraMp3",
       "videoOutputDir": "Movies/UltraMp3"
@@ -184,10 +192,13 @@
     "clenParam": "clen",
     "expireParam": "expire",
     "previewClientCount": 2,
-    "previewAudioMimes": ["audio/mp4", "audio/aac"],
+    "previewAudioMimes": [
+      "audio/mp4",
+      "audio/aac"
+    ],
     "retryCount": 3,
     "retryDelayBaseMs": 1500,
-    "cookieResetOnAttempt": 2,
+    "cookieResetOnAttempt": 3,
     "audioEmptyErrorMsg": "Ses akisi bulunamadi",
     "streamErrorMsg": "Stream alınamadı — lütfen tekrar deneyin",
     "previewMinBitrate": 0
@@ -210,10 +221,22 @@
       "gl": "US",
       "utcOffsetMinutes": 0
     },
-    "statusBlacklist": ["LOGIN_REQUIRED", "UNPLAYABLE", "ERROR"],
+    "statusBlacklist": [
+      "LOGIN_REQUIRED",
+      "UNPLAYABLE",
+      "ERROR"
+    ],
     "ageGateStatus": "AGE_VERIFICATION_REQUIRED",
-    "audioMimePreference": ["mp4", "aac", "m4a"],
-    "videoCodecPreference": ["video/mp4", "avc", "h264"],
+    "audioMimePreference": [
+      "mp4",
+      "aac",
+      "m4a"
+    ],
+    "videoCodecPreference": [
+      "video/mp4",
+      "avc",
+      "h264"
+    ],
     "cipherParamUrl": "url",
     "cipherParamSig": "s",
     "cipherParamSp": "sp",

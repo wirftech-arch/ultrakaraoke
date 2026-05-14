@@ -1,6 +1,6 @@
 {
-  "version": 8,
-  "updated": "2026-05-14",
+  "version": 9,
+  "updated": "2026-05-15",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
     "suggestUrl": "https://suggestqueries-clients6.google.com/complete/search",
@@ -241,6 +241,10 @@
     "cipherParamSig": "s",
     "cipherParamSp": "sp",
     "cipherParamSpDefault": "signature",
-    "throttleTokenParam": "n"
+    "throttleTokenParam": "n",
+    "clientNameHeader": "X-YouTube-Client-Name",
+    "clientVersionHeader": "X-YouTube-Client-Version",
+    "downloadUserAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "defaultOrigin": "https://www.youtube.com"
   }
 }

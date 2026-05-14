@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "updated": "2026-05-14",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -55,6 +55,20 @@
       },
       {
         "priority": 2,
+        "name": "ANDROID_TESTSUITE",
+        "version": "1.9",
+        "id": "30",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 3,
         "name": "ANDROID_VR",
         "version": "1.56.21",
         "id": "28",
@@ -70,7 +84,7 @@
         "headers": {}
       },
       {
-        "priority": 3,
+        "priority": 4,
         "name": "ANDROID",
         "version": "19.44.38",
         "id": "3",
@@ -84,7 +98,7 @@
         "headers": {}
       },
       {
-        "priority": 4,
+        "priority": 5,
         "name": "WEB_EMBEDDED_PLAYER",
         "version": "2.20231121.08.00",
         "id": "56",
@@ -99,7 +113,7 @@
         }
       },
       {
-        "priority": 5,
+        "priority": 6,
         "name": "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
         "version": "2.0",
         "id": "85",
@@ -114,7 +128,7 @@
         }
       },
       {
-        "priority": 6,
+        "priority": 7,
         "name": "ANDROID_CREATOR",
         "version": "24.45.100",
         "id": "14",
@@ -173,7 +187,7 @@
     "previewAudioMimes": ["audio/mp4", "audio/aac"],
     "retryCount": 3,
     "retryDelayBaseMs": 1500,
-    "cookieResetOnAttempt": 1,
+    "cookieResetOnAttempt": 2,
     "audioEmptyErrorMsg": "Ses akisi bulunamadi",
     "streamErrorMsg": "Stream alınamadı — lütfen tekrar deneyin",
     "previewMinBitrate": 0

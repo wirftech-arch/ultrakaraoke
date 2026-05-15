@@ -40,20 +40,6 @@
     "clients": [
       {
         "priority": 1,
-        "name": "ANDROID_TESTSUITE",
-        "version": "1.9",
-        "id": "30",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
-        "ctx": {
-          "androidSdkVersion": 30,
-          "osName": "Android",
-          "osVersion": "11"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 2,
         "name": "IOS",
         "version": "19.29.1",
         "id": "5",
@@ -64,6 +50,20 @@
           "deviceModel": "iPhone16,2",
           "osName": "iOS",
           "osVersion": "18.1.0"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 2,
+        "name": "ANDROID_TESTSUITE",
+        "version": "1.9",
+        "id": "30",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
         },
         "headers": {}
       },

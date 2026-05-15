@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "updated": "2026-05-15",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -41,10 +41,10 @@
       {
         "priority": 1,
         "name": "IOS",
-        "version": "19.45.4",
+        "version": "19.29.1",
         "id": "5",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
+        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "ua": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
         "ctx": {
           "deviceMake": "Apple",
           "deviceModel": "iPhone16,2",
@@ -70,10 +70,10 @@
       {
         "priority": 3,
         "name": "ANDROID_VR",
-        "version": "1.56.21",
+        "version": "1.60.19",
         "id": "28",
         "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
+        "ua": "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L) gzip",
         "ctx": {
           "androidSdkVersion": 32,
           "osName": "Android",
@@ -86,10 +86,10 @@
       {
         "priority": 4,
         "name": "ANDROID",
-        "version": "19.44.38",
+        "version": "19.29.37",
         "id": "3",
         "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/19.44.38 (Linux; U; Android 11; Pixel 5) gzip",
+        "ua": "com.google.android.youtube/19.29.37 (Linux; U; Android 11; Pixel 5) gzip",
         "ctx": {
           "androidSdkVersion": 30,
           "osName": "Android",
@@ -100,7 +100,7 @@
       {
         "priority": 5,
         "name": "WEB_EMBEDDED_PLAYER",
-        "version": "2.20231121.08.00",
+        "version": "2.20240101.00.00",
         "id": "56",
         "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
         "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -147,7 +147,7 @@
     }
   },
   "download": {
-    "userAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "userAgent": "com.google.android.youtube/19.29.37 (Linux; U; Android 11) gzip",
     "chunkCount": 4,
     "chunkBufferBytes": 1048576,
     "streamingBufferBytes": 1048576,
@@ -161,7 +161,11 @@
     "minChunkSizeBytes": 524288,
     "expireToleranceSec": 60,
     "audioFormats": {
-      "preferredMimes": ["audio/mp4","audio/aac","audio/m4a"],
+      "preferredMimes": [
+        "audio/mp4",
+        "audio/aac",
+        "audio/m4a"
+      ],
       "targetBitrateMin": 120000,
       "targetBitrateMax": 136000,
       "fallbackBitrateMin": 96000,
@@ -169,7 +173,11 @@
       "minBitrate": 64000
     },
     "videoFormats": {
-      "preferredCodecs": ["video/mp4","avc","h264"],
+      "preferredCodecs": [
+        "video/mp4",
+        "avc",
+        "h264"
+      ],
       "outputDir": "UltraMp3",
       "audioOutputDir": "Music/UltraMp3",
       "videoOutputDir": "Movies/UltraMp3"
@@ -184,7 +192,10 @@
     "clenParam": "clen",
     "expireParam": "expire",
     "previewClientCount": 2,
-    "previewAudioMimes": ["audio/mp4","audio/aac"],
+    "previewAudioMimes": [
+      "audio/mp4",
+      "audio/aac"
+    ],
     "retryCount": 3,
     "retryDelayBaseMs": 1500,
     "cookieResetOnAttempt": 3,
@@ -210,10 +221,22 @@
       "gl": "US",
       "utcOffsetMinutes": 0
     },
-    "statusBlacklist": ["LOGIN_REQUIRED","UNPLAYABLE","ERROR"],
+    "statusBlacklist": [
+      "LOGIN_REQUIRED",
+      "UNPLAYABLE",
+      "ERROR"
+    ],
     "ageGateStatus": "AGE_VERIFICATION_REQUIRED",
-    "audioMimePreference": ["mp4","aac","m4a"],
-    "videoCodecPreference": ["video/mp4","avc","h264"],
+    "audioMimePreference": [
+      "mp4",
+      "aac",
+      "m4a"
+    ],
+    "videoCodecPreference": [
+      "video/mp4",
+      "avc",
+      "h264"
+    ],
     "cipherParamUrl": "url",
     "cipherParamSig": "s",
     "cipherParamSp": "sp",
@@ -221,7 +244,7 @@
     "throttleTokenParam": "n",
     "clientNameHeader": "X-YouTube-Client-Name",
     "clientVersionHeader": "X-YouTube-Client-Version",
-    "downloadUserAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "downloadUserAgent": "com.google.android.youtube/19.29.37 (Linux; U; Android 11) gzip",
     "defaultOrigin": "https://www.youtube.com"
   }
 }

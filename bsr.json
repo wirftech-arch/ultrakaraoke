@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "updated": "2026-05-15",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -43,7 +43,7 @@
         "name": "IOS",
         "version": "19.45.4",
         "id": "5",
-        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
         "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
         "ctx": {
           "deviceMake": "Apple",

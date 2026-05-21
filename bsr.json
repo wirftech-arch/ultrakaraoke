@@ -203,7 +203,7 @@
     "retryDelayBaseMs": 1000,
     "cookieResetOnAttempt": 2,
     "audioEmptyErrorMsg": "Ses akisi bulunamadi",
-    "streamErrorMsg": "Stream alınamadı — lütfen tekrar deneyin",
+    "streamErrorMsg": "Stream alinamadi — lutfen tekrar deneyin",
     "previewMinBitrate": 64000
   },
   "cookie": {

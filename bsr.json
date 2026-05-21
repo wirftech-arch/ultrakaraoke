@@ -26,7 +26,7 @@
     "thumbnailTemplate": "https://i.ytimg.com/vi/{videoId}/mqdefault.jpg",
     "watchUrlTemplate": "https://www.youtube.com/watch?v={videoId}",
     "clientId": "1",
-    "clientVersion": "2.20240101.00.00",
+    "clientVersion": "2.20250501.00.00",
     "clientName": "WEB"
   },
   "player": {
@@ -43,81 +43,6 @@
     "clients": [
       {
         "priority": 1,
-        "name": "ANDROID_TESTSUITE",
-        "version": "1.9",
-        "id": "30",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
-        "ctx": {
-          "androidSdkVersion": 30,
-          "osName": "Android",
-          "osVersion": "11"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 2,
-        "name": "ANDROID_VR",
-        "version": "1.60.19",
-        "id": "28",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L) gzip",
-        "ctx": {
-          "androidSdkVersion": 32,
-          "osName": "Android",
-          "osVersion": "12L",
-          "deviceMake": "Oculus",
-          "deviceModel": "Quest 3"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 3,
-        "name": "IOS",
-        "version": "20.03.02",
-        "id": "5",
-        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
-        "ua": "com.google.ios.youtube/20.03.02 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X)",
-        "ctx": {
-          "deviceMake": "Apple",
-          "deviceModel": "iPhone16,2",
-          "osName": "iOS",
-          "osVersion": "18.3.2",
-          "userInterfaceTheme": "USER_INTERFACE_THEME_LIGHT"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 4,
-        "name": "ANDROID",
-        "version": "20.10.38",
-        "id": "3",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/20.10.38 (Linux; U; Android 11; Pixel 5) gzip",
-        "ctx": {
-          "androidSdkVersion": 30,
-          "osName": "Android",
-          "osVersion": "11"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 5,
-        "name": "WEB_EMBEDDED_PLAYER",
-        "version": "2.20250101.00.00",
-        "id": "56",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "ctx": {
-          "clientFormFactor": "UNKNOWN_FORM_FACTOR"
-        },
-        "headers": {
-          "Origin": "https://www.youtube.com",
-          "Referer": "https://www.youtube.com/"
-        }
-      },
-      {
-        "priority": 6,
         "name": "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
         "version": "2.0",
         "id": "85",
@@ -132,12 +57,86 @@
         }
       },
       {
+        "priority": 2,
+        "name": "ANDROID_VR",
+        "version": "1.62.27",
+        "id": "28",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.apps.youtube.vr.oculus/1.62.27 (Linux; U; Android 12L) gzip",
+        "ctx": {
+          "androidSdkVersion": 32,
+          "osName": "Android",
+          "osVersion": "12L",
+          "deviceMake": "Oculus",
+          "deviceModel": "Quest 3"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 3,
+        "name": "ANDROID_TESTSUITE",
+        "version": "1.9",
+        "id": "30",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 4,
+        "name": "IOS",
+        "version": "20.03.02",
+        "id": "5",
+        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "ua": "com.google.ios.youtube/20.03.02 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X)",
+        "ctx": {
+          "deviceMake": "Apple",
+          "deviceModel": "iPhone16,2",
+          "osName": "iOS",
+          "osVersion": "18.3.2"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 5,
+        "name": "ANDROID",
+        "version": "20.10.38",
+        "id": "3",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/20.10.38 (Linux; U; Android 11; Pixel 5) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 6,
+        "name": "WEB_EMBEDDED_PLAYER",
+        "version": "2.20250501.00.00",
+        "id": "56",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "ctx": {
+          "clientFormFactor": "UNKNOWN_FORM_FACTOR"
+        },
+        "headers": {
+          "Origin": "https://www.youtube.com",
+          "Referer": "https://www.youtube.com/"
+        }
+      },
+      {
         "priority": 7,
         "name": "ANDROID_CREATOR",
-        "version": "24.45.100",
+        "version": "24.47.100",
         "id": "14",
         "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.apps.youtube.creator/24.45.100 (Linux; U; Android 11) gzip",
+        "ua": "com.google.android.apps.youtube.creator/24.47.100 (Linux; U; Android 11) gzip",
         "ctx": {
           "androidSdkVersion": 30
         },
@@ -200,9 +199,9 @@
       "audio/mp4",
       "audio/aac"
     ],
-    "retryCount": 3,
-    "retryDelayBaseMs": 1500,
-    "cookieResetOnAttempt": 3,
+    "retryCount": 5,
+    "retryDelayBaseMs": 1000,
+    "cookieResetOnAttempt": 2,
     "audioEmptyErrorMsg": "Ses akisi bulunamadi",
     "streamErrorMsg": "Stream alınamadı — lütfen tekrar deneyin",
     "previewMinBitrate": 64000
@@ -211,8 +210,8 @@
     "harvestUrl": "https://www.youtube.com",
     "cookieDomain": "https://www.youtube.com",
     "visitorDataJs": "window.ytcfg?.get('VISITOR_DATA') || ''",
-    "poTokenJs": "window.ytcfg?.get('INNERTUBE_CONTEXT_CLIENT_INFO')?.poToken || ''",
-    "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
+    "poTokenJs": "",
+    "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36",
     "timeoutMs": 12000,
     "blockNetworkImage": true,
     "domStorageEnabled": true

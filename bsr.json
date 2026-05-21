@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 16,
   "updated": "2026-05-22",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -43,35 +43,6 @@
     "clients": [
       {
         "priority": 1,
-        "name": "IOS",
-        "version": "19.45.4",
-        "id": "5",
-        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
-        "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
-        "ctx": {
-          "deviceMake": "Apple",
-          "deviceModel": "iPhone16,2",
-          "osName": "iOS",
-          "osVersion": "18.1.0"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 2,
-        "name": "ANDROID_TESTSUITE",
-        "version": "1.9",
-        "id": "30",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
-        "ctx": {
-          "androidSdkVersion": 30,
-          "osName": "Android",
-          "osVersion": "11"
-        },
-        "headers": {}
-      },
-      {
-        "priority": 3,
         "name": "ANDROID_VR",
         "version": "1.56.21",
         "id": "28",
@@ -87,12 +58,24 @@
         "headers": {}
       },
       {
-        "priority": 4,
-        "name": "ANDROID",
-        "version": "19.44.38",
-        "id": "3",
+        "priority": 2,
+        "name": "ANDROID_CREATOR",
+        "version": "24.47.100",
+        "id": "14",
         "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.youtube/19.44.38 (Linux; U; Android 11; Pixel 5) gzip",
+        "ua": "com.google.android.apps.youtube.creator/24.47.100 (Linux; U; Android 11) gzip",
+        "ctx": {
+          "androidSdkVersion": 30
+        },
+        "headers": {}
+      },
+      {
+        "priority": 3,
+        "name": "ANDROID_TESTSUITE",
+        "version": "1.9",
+        "id": "30",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/1.9 (Linux; U; Android 11) gzip",
         "ctx": {
           "androidSdkVersion": 30,
           "osName": "Android",
@@ -101,7 +84,36 @@
         "headers": {}
       },
       {
+        "priority": 4,
+        "name": "IOS",
+        "version": "19.45.4",
+        "id": "5",
+        "key": "AIzaSyB-63vPrdThhKuerbB2N_l7Kwwcxj6yUAc",
+        "ua": "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X)",
+        "ctx": {
+          "deviceMake": "Apple",
+          "deviceModel": "iPhone16,2",
+          "osName": "iOS",
+          "osVersion": "18.1.0"
+        },
+        "headers": {}
+      },
+      {
         "priority": 5,
+        "name": "ANDROID",
+        "version": "20.10.38",
+        "id": "3",
+        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
+        "ua": "com.google.android.youtube/20.10.38 (Linux; U; Android 11; Pixel 5) gzip",
+        "ctx": {
+          "androidSdkVersion": 30,
+          "osName": "Android",
+          "osVersion": "11"
+        },
+        "headers": {}
+      },
+      {
+        "priority": 6,
         "name": "WEB_EMBEDDED_PLAYER",
         "version": "2.20250501.00.00",
         "id": "56",
@@ -116,7 +128,7 @@
         }
       },
       {
-        "priority": 6,
+        "priority": 7,
         "name": "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
         "version": "2.0",
         "id": "85",
@@ -129,18 +141,6 @@
           "Origin": "https://www.youtube.com",
           "Referer": "https://www.youtube.com/"
         }
-      },
-      {
-        "priority": 7,
-        "name": "ANDROID_CREATOR",
-        "version": "24.47.100",
-        "id": "14",
-        "key": "AIzaSyA8eiZmM1FaDVjRy-df2KTyQ_vz_yYM39w",
-        "ua": "com.google.android.apps.youtube.creator/24.47.100 (Linux; U; Android 11) gzip",
-        "ctx": {
-          "androidSdkVersion": 30
-        },
-        "headers": {}
       }
     ],
     "resolveStrategy": {
@@ -150,7 +150,7 @@
     }
   },
   "download": {
-    "userAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "userAgent": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
     "chunkCount": 4,
     "chunkBufferBytes": 1048576,
     "streamingBufferBytes": 1048576,
@@ -186,8 +186,7 @@
       "videoOutputDir": "Movies/UltraMp3"
     },
     "rangeParams": "rn=1&rbuf=0",
-    "throttleTokenParam": "n",
-    "useFixedRn": true
+    "throttleTokenParam": "n"
   },
   "stream": {
     "videoIdRegex": "(?:v=|/embed/|/shorts/)([a-zA-Z0-9_-]{11})",
@@ -249,7 +248,7 @@
     "throttleTokenParam": "n",
     "clientNameHeader": "X-YouTube-Client-Name",
     "clientVersionHeader": "X-YouTube-Client-Version",
-    "downloadUserAgent": "com.google.android.youtube/19.44.38 (Linux; U; Android 11) gzip",
+    "downloadUserAgent": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
     "defaultOrigin": "https://www.youtube.com"
   }
 }

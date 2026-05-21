@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 19,
   "updated": "2026-05-22",
   "search": {
     "baseUrl": "https://www.googleapis.com/youtube/v3/search",
@@ -250,5 +250,14 @@
     "clientVersionHeader": "X-YouTube-Client-Version",
     "downloadUserAgent": "com.google.android.apps.youtube.vr.oculus/1.56.21 (Linux; U; Android 12L) gzip",
     "defaultOrigin": "https://www.youtube.com"
+  },
+  "nDecode": {
+    "_comment": "n throttle decode - YouTube CDN 403 cozumu. staticJs+funcName doluysa kullan, yoksa base.js extract edilir",
+    "playerPageUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "baseJsPattern": "/s/player/[^/]+/player_ias\\.vflset/[^\\'\"]+\\.js",
+    "nFuncPattern": "([a-zA-Z$_][\\w$]*)\\s*=\\s*function\\(\\w\\)\\{var \\w=\\w\\.split\\(\"\"\\)",
+    "staticJs": "",
+    "funcName": "",
+    "cacheHours": 12
   }
 }
